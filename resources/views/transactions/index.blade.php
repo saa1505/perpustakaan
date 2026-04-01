@@ -19,7 +19,7 @@
 
         {{-- TABEL --}}
         <div class="overflow-x-auto">
-            <table class="w-full bg-white shadow rounded-lg overflow-hidden">
+            <table id="myTable" class="w-full bg-white shadow rounded-lg overflow-hidden">
 
                 {{-- HEADER --}}
                 <thead class="bg-gray-800 text-white">
@@ -57,9 +57,29 @@
 
                             {{-- DENDA --}}
                             <td class="p-2">
-                                <span class="{{ $trx->denda > 0 ? 'text-red-500 font-bold' : '' }}">
-                                    Rp {{ number_format($trx->denda) }}
-                                </span>
+                                <div class="flex flex-col items-center gap-1">
+
+                                    {{-- NOMINAL --}}
+                                    <span
+                                        class="text-sm font-semibold 
+                                        {{ $trx->denda > 0 ? 'text-red-500' : 'text-gray-700' }}">
+                                        Rp {{ number_format($trx->denda) }}
+                                    </span>
+
+                                    {{-- KONDISI --}}
+                                    @if ($trx->kondisi)
+                                        <span
+                                            class="px-2 py-0.5 text-xs rounded-full font-medium
+                                            {{ $trx->kondisi == 'baik' ? 'bg-green-100 text-green-700' : '' }}
+                                            {{ $trx->kondisi == 'rusak' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                                            {{ $trx->kondisi == 'hilang' ? 'bg-red-100 text-red-700' : '' }}">
+                                            {{ ucfirst($trx->kondisi) }}
+                                        </span>
+                                    @else
+                                        <span class="text-gray-400 text-xs">-</span>
+                                    @endif
+
+                                </div>
                             </td>
 
                             {{-- STATUS --}}
@@ -76,14 +96,14 @@
                             </td>
 
                             {{-- AKSI --}}
-                            <td class="p-2">
+                            <td class="p-2 min-w-[160px]">
                                 @if ($trx->status == 'pinjam')
                                     <form action="{{ route('transactions.kembali', $trx->id) }}" method="POST"
-                                        class="flex items-center justify-center gap-2">
+                                       class="flex items-center gap-2 whitespace-nowrap">
                                         @csrf
 
                                         <select name="kondisi"
-                                            class="border border-gray-300 rounded px-2 py-1 text-sm focus:ring focus:ring-blue-200">
+                                            class="border border-gray-300 rounded px-2 py-1 text-sm w-[90px]">
                                             <option value="baik">Baik</option>
                                             <option value="rusak">Rusak</option>
                                             <option value="hilang">Hilang</option>
@@ -167,6 +187,18 @@
                                 @endforeach
                             </select>
                         </div>
+                        {{-- TANGGAL PINJAM --}}
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Pinjam</label>
+                            <input type="date" name="tanggal_pinjam" value="{{ date('Y-m-d') }}"
+                                class="form-control" required>
+                        </div>
+
+                        {{-- TANGGAL KEMBALI --}}
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Kembali</label>
+                            <input type="date" name="tanggal_kembali" class="form-control" required>
+                        </div>
 
                         <button type="submit" class="btn btn-success w-100">
                             Pinjam
@@ -180,5 +212,30 @@
 
     {{-- BOOTSTRAP --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                pageLength: 5,
+                lengthMenu: [5, 10, 25, 50],
+                language: {
+                    search: "🔍 Cari:",
+                    lengthMenu: "Tampilkan _MENU_ data",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    paginate: {
+                        next: "Next",
+                        previous: "Prev"
+                    },
+                    zeroRecords: "Data tidak ditemukan"
+                }
+            });
+        });
+    </script>
 
 </x-app-layout>

@@ -24,8 +24,8 @@ class TransactionController extends Controller
         Transaction::create([
             'user_id' => $request->user_id,
             'book_id' => $request->book_id,
-            'tanggal_pinjam' => now(),
-            'tanggal_kembali' => Carbon::now()->addDays(7), // batas 7 hari
+            'tanggal_pinjam' => $request->tanggal_pinjam,
+            'tanggal_kembali' => $request->tanggal_kembali,
             'status' => 'pinjam'
         ]);
 

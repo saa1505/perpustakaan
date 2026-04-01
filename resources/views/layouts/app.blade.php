@@ -15,6 +15,37 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+
+    <style>
+        /* Fix bagian "Tampilkan data" */
+        .dataTables_length label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .dataTables_length select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background-color: #fff;
+            min-width: 70px;
+        }
+
+        /* Fix search */
+        .dataTables_filter {
+            margin-bottom: 10px;
+        }
+
+        .dataTables_filter input {
+            margin-left: 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -32,7 +63,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('books.index') }}" class="block px-3 py-2 hover:bg-gray-700 rounded">
+                    <a href="{{ route('books.index') }}" class="block px-3 py-2 rounded text-gray-300 no-underline hover:bg-gray-700 hover:text-white">
                         📚 Buku
                     </a>
                 </li>
