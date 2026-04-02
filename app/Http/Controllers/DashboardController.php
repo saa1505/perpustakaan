@@ -15,11 +15,18 @@ class DashboardController extends Controller
         $totalDipinjam = Transaction::where('status', 'pinjam')->count();
         $totalKembali = Transaction::where('status', 'kembali')->count();
 
+        $users = User::all();
+        $books = Book::all();
+        $transactions = Transaction::with('user', 'book')->get();
+
         return view('dashboard', compact(
             'totalStok',
             'totalSiswa',
             'totalDipinjam',
-            'totalKembali'
+            'totalKembali',
+            'users',
+            'books',
+            'transactions'
         ));
     }
 }

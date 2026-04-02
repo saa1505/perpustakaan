@@ -59,17 +59,24 @@
             <ul class="space-y-2">
                 <li>
                     <a href="{{ route('dashboard') }}" class="block px-3 py-2 hover:bg-gray-700 rounded">
-                        📊 Dashboard
+                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('books.index') }}" class="block px-3 py-2 rounded text-gray-300 no-underline hover:bg-gray-700 hover:text-white">
-                        📚 Buku
+                    <a href="{{ route('books.index') }}"
+                        class="block px-3 py-2 rounded 
+                        {{ request()->routeIs('books.*') ? 'bg-gray-700 text-white' : 'text-white hover:bg-gray-700' }}">
+                         Buku
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('transactions.index') }}" class="block px-3 py-2 hover:bg-gray-700 rounded">
                         Transaksi
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('users.index') }}" class="block px-3 py-2 hover:bg-gray-700 rounded">
+                         Anggota
                     </a>
                 </li>
             </ul>
