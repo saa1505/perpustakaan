@@ -1,75 +1,92 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
+<nav x-data="{ open: false }" 
+class="sticky top-0 z-50 backdrop-blur-xl bg-white/60 border-b border-white/20">
 
-            <!-- LEFT: Dashboard -->
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        
+        <div class="flex justify-end items-center h-16">
+
+            {{-- RIGHT --}}
             <div class="flex items-center">
 
-            </div>
+                <x-dropdown align="right" width="56">
 
-            <!-- RIGHT: Admin Dropdown -->
-            <div class="hidden sm:flex sm:items-center">
-                <x-dropdown align="right" width="48">
+                    {{-- 🔥 TRIGGER --}}
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 bg-white hover:text-gray-800 focus:outline-none transition">
-                            <div>{{ Auth::user()->name }}</div>
+                            class="group flex items-center gap-3 px-4 py-2 rounded-2xl 
+                            bg-white/50 hover:bg-white/80 backdrop-blur-xl
+                            border border-white/30 
+                            shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+                            hover:shadow-[0_10px_40px_rgba(0,0,0,0.15)]
+                            transition-all duration-300">
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
+                            {{-- AVATAR --}}
+                            <div class="relative">
+                                <div class="w-9 h-9 rounded-full 
+                                    bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 
+                                    flex items-center justify-center text-white text-sm font-bold
+                                    shadow-md">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+
+                                {{-- ONLINE DOT --}}
+                                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-white rounded-full"></span>
                             </div>
+
+                            {{-- NAME --}}
+                            <div class="text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition">
+                                {{ Auth::user()->name }}
+                            </div>
+
+                            {{-- ICON --}}
+                            <svg class="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition"
+                                viewBox="0 0 20 20">
+                                <path fill="currentColor"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z"/>
+                            </svg>
                         </button>
                     </x-slot>
 
+                    {{-- 🔥 DROPDOWN --}}
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            Profile
-                        </x-dropdown-link>
+                        <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
 
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault(); this.closest('form').submit();">
-                                Log Out
-                            </x-dropdown-link>
-                        </form>
+                            {{-- HEADER --}}
+                            <div class="px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50">
+                                <div class="text-sm font-semibold text-gray-800">
+                                    {{ Auth::user()->name }}
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    {{ Auth::user()->email }}
+                                </div>
+                            </div>
+
+                            {{-- MENU --}}
+                            <div class="py-2">
+
+                                <a href="{{ route('profile.edit') }}"
+                                   class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition">
+                                    ⚙️ Profile
+                                </a>
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition">
+                                        🚪 Logout
+                                    </button>
+                                </form>
+
+                            </div>
+
+                        </div>
                     </x-slot>
+
                 </x-dropdown>
+
             </div>
 
         </div>
-    </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
     </div>
 </nav>

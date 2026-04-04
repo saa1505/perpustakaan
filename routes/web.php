@@ -22,42 +22,48 @@ Route::get('/search', function (Illuminate\Http\Request $request) {
 
     $q = $request->q;
 
-    $users = \App\Models\User::where('name', 'like', "%$q%")
+    $users = User::where('name', 'like', "%$q%")
+        ->orWhere('email', 'like', "%$q%")
+        ->orWhereRaw("'anggota' LIKE ?", ["%$q%"])
         ->get()
         ->map(function ($u) {
             return [
-                'type' => '👤 Anggota',
+                'type' => 'Anggota',
                 'name' => $u->name,
                 'detail' => $u->email
             ];
         });
 
-    $books = \App\Models\Book::where('judul', 'like', "%$q%")
+    $books = Book::where('judul', 'like', "%$q%")
+        ->orWhere('penulis', 'like', "%$q%")
+        ->orWhere('kategori', 'like', "%$q%")
+        ->orWhereRaw("'buku' LIKE ?", ["%$q%"])
         ->get()
         ->map(function ($b) {
             return [
-                'type' => '📚 Buku',
+                'type' => 'Buku',
                 'name' => $b->judul,
                 'detail' => $b->penulis
             ];
         });
 
-    $transactions = \App\Models\Transaction::with('user', 'book')
+    $transactions = Transaction::with('user', 'book')
         ->where('kondisi', 'like', "%$q%")
-        ->orWhereHas('book', function ($q2) use ($q) {
-            $q2->where('judul', 'like', "%$q%");
-        })
+        ->orWhereRaw("'transaksi' LIKE ?", ["%$q%"])
         ->get()
         ->map(function ($t) {
             return [
-                'type' => '📊 Transaksi',
+                'type' => 'Transaksi',
                 'name' => $t->user->name,
                 'detail' => $t->book->judul . ' (' . ($t->kondisi ?? '-') . ')'
             ];
         });
 
     return response()->json(
-        $users->merge($books)->merge($transactions)
+        $users
+            ->concat($books)
+            ->concat($transactions)
+            ->values()
     );
 });
 
