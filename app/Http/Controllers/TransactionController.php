@@ -42,14 +42,17 @@ class TransactionController extends Controller
         $denda = 0;
 
         //  DENDA TERLAMBAT
-        if ($today > $batas) {
-            $hariTelat = $today->diffInDays($batas);
-            $denda += $hariTelat * 2000;
-        }
+        // 🔥 PRIORITAS: kalau rusak/hilang → LANGSUNG 120k
+        if (in_array($request->kondisi, ['rusak', 'hilang', 'kotor'])) {
 
-        //  DENDA KERUSAKAN
-        if ($request->kondisi == 'rusak' || $request->kondisi == 'hilang'  || $request->kondisi == 'kotor') {
-            $denda += 120000;
+            $denda = 120000;
+        } else {
+
+            // baru hitung telat
+            if ($today > $batas) {
+                $hariTelat = $batas->diffInDays($today);
+                $denda = $hariTelat * 2000;
+            }
         }
 
         $trx->update([

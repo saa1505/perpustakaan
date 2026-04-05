@@ -52,12 +52,11 @@
     <div class="min-h-screen bg-gray-100 flex">
 
         <!-- Sidebar -->
-        <!-- Sidebar -->
         <div
             class="w-64 min-h-screen p-6 
-    bg-white/70 backdrop-blur-2xl 
-    border-r border-white/30 
-    shadow-xl relative">
+            bg-white/70 backdrop-blur-2xl 
+            border-r border-white/30 
+            shadow-xl relative">
 
             <!-- LOGO -->
             <div class="flex justify-center items-center mb-10">
@@ -132,6 +131,20 @@
                     </a>
                 </li>
 
+                <li>
+                    <a href="{{ route('laporan.index') }}"
+                        class="group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 relative
+                     {{ request()->routeIs('laporan.*') ? 'bg-pink-50 text-pink-600 shadow-sm' : 'text-gray-600 hover:bg-gray-100' }}">
+
+                        @if (request()->routeIs('laporan.*'))
+                            <div class="absolute left-0 top-2 bottom-2 w-1 bg-pink-500 rounded-r-full"></div>
+                        @endif
+
+                        <span class="text-lg">📊</span>
+                        <span class="font-medium">Report</span>
+                    </a>
+                </li>
+
             </ul>
 
             <!-- PROFILE -->
@@ -139,13 +152,13 @@
 
                 <div
                     class="flex items-center gap-3 p-3 rounded-2xl 
-            bg-gradient-to-r from-blue-50 to-purple-50 
-            border border-white shadow-sm">
+                    bg-gradient-to-r from-blue-50 to-purple-50 
+                    border border-white shadow-sm">
 
                     <div
                         class="w-10 h-10 rounded-full 
-                bg-gradient-to-r from-blue-500 to-purple-500 
-                flex items-center justify-center text-white font-bold">
+                        bg-gradient-to-r from-blue-500 to-purple-500 
+                        flex items-center justify-center text-white font-bold">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
 

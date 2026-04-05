@@ -5,6 +5,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 use App\Models\Book;
 use App\Models\User;
 use App\Models\Transaction;
@@ -82,5 +83,9 @@ Route::post('/transactions/kembali/{id}', [TransactionController::class, 'kembal
 Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
 
 Route::resource('users', UserController::class);
+
+Route::get('/laporan', [App\Http\Controllers\ReportController::class, 'index'])->name('laporan.index');
+Route::get('/laporan/pdf', [ReportController::class, 'exportPdf'])->name('laporan.pdf');
+
 
 require __DIR__ . '/auth.php';
