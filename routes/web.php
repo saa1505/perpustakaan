@@ -19,6 +19,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('/user', function () {
+    return view('user.home');
+})->middleware('auth');
+
 Route::get('/search', function (Illuminate\Http\Request $request) {
 
     $q = $request->q;
@@ -86,6 +90,21 @@ Route::resource('users', UserController::class);
 
 Route::get('/laporan', [App\Http\Controllers\ReportController::class, 'index'])->name('laporan.index');
 Route::get('/laporan/pdf', [ReportController::class, 'exportPdf'])->name('laporan.pdf');
+Route::get('/laporan/print', [ReportController::class, 'print'])->name('laporan.print');
 
+Route::get('/buku', [UserController::class, 'buku'])->middleware('auth');
+Route::post('/pinjam/{id}', [UserController::class, 'pinjam'])->name('pinjam');
+Route::get('/transaksi', [UserController::class, 'transaksi']);
+
+Route::get('/user', function () {
+    $buku = Book::all(); // ambil data buku
+
+    return view('user.home', compact('buku'));
+})->middleware('auth');
+
+Route::get('/buku/{id}', [UserController::class, 'detail']);
+Route::get('/buku-saya', [UserController::class, 'bukuSaya']);
+Route::get('/transaksi/edit/{id}', [UserController::class, 'editTanggal']);
+Route::post('/transaksi/edit/{id}', [UserController::class, 'updateTanggal']);
 
 require __DIR__ . '/auth.php';

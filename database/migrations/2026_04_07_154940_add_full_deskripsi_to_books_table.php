@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('transactions', 'denda')) {
-            Schema::table('transactions', function (Blueprint $table) {
-                $table->integer('denda')->default(0);
-                $table->string('kondisi')->nullable();
+        if (!Schema::hasColumn('books', 'deskripsi')) {
+            Schema::table('books', function (Blueprint $table) {
+                $table->text('deskripsi')->nullable();
+                $table->text('deskripsi_full')->nullable();
             });
         }
     }
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('transactions', function (Blueprint $table) {
+        Schema::table('books', function (Blueprint $table) {
             //
         });
     }

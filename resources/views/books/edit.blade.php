@@ -33,7 +33,14 @@
 
                 <div class="mb-3">
                     <label>Kategori</label>
-                    <input type="text" name="kategori" value="{{ $book->kategori }}" class="form-control">
+                    <select name="kategori" class="form-control">
+                        <option value="dongeng" {{ $book->kategori == 'dongeng' ? 'selected' : '' }}>Dongeng</option>
+                        <option value="fiksi" {{ $book->kategori == 'fiksi' ? 'selected' : '' }}>Fiksi</option>
+                        <option value="non-fiksi" {{ $book->kategori == 'non-fiksi' ? 'selected' : '' }}>Non-Fiksi
+                        </option>
+                        <option value="sejarah" {{ $book->kategori == 'sejarah' ? 'selected' : '' }}>Sejarah</option>
+                        <option value="kenangan" {{ $book->kategori == 'kenangan' ? 'selected' : '' }}>Kenangan</option>
+                    </select>
                 </div>
 
                 <div class="mb-3">

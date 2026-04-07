@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('transactions', 'denda')) {
+        if (!Schema::hasColumn('transactions', 'tanggal_kembali')) {
             Schema::table('transactions', function (Blueprint $table) {
-                $table->integer('denda')->default(0);
-                $table->string('kondisi')->nullable();
+                $table->date('tanggal_kembali')->nullable();
             });
         }
     }

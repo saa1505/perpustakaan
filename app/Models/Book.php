@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    protected $fillable = ['judul', 'penulis', 'penerbit' , 'tahun' , 'kategori', 'stok'];
+    protected $fillable = ['judul', 'penulis', 'penerbit', 'tahun', 'kategori', 'stok'];
+
+    public function home()
+    {
+        $buku = Book::all();
+
+        return view('user.home', compact('buku'));
+    }
 }

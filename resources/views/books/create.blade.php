@@ -35,7 +35,14 @@
 
                     <div class="mb-2">
                         <label>Kategori</label>
-                        <input type="text" name="kategori" class="form-control">
+                        <select name="kategori" class="form-control">
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="dongeng">Dongeng</option>
+                            <option value="fiksi">Fiksi</option>
+                            <option value="non-fiksi">Non-Fiksi</option>
+                            <option value="sejarah">Sejarah</option>
+                            <option value="kenangan">Kenangan</option>
+                        </select>
                     </div>
 
                     <div class="mb-2">

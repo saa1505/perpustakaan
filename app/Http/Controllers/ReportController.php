@@ -30,19 +30,25 @@ class ReportController extends Controller
     public function exportPdf()
     {
         $transactions = Transaction::with('user', 'book')
-                        ->where('status', 'pinjam')
-                        ->get();
+            ->where('status', 'pinjam')
+            ->get();
 
         $pdf = Pdf::loadView('laporan/pdf', compact('transactions'));
 
         return $pdf->download('laporan-peminjaman.pdf');
     }
 
-    public function print()
+    public function print(Request $request)
     {
-        $transactions = Transaction::with('user', 'book')
-                        ->where('status', 'pinjam')
-                        ->get();
+        $query = Transaction::with('user', 'book');
+
+        // kalau pakai filter tanggal
+        if ($request->from && $request->to) {
+            $query->whereBetween('tanggal_pinjam', [$request->from, $request->to]);
+        }
+
+        // ❌ JANGAN ADA where status
+        $transactions = $query->get();
 
         return view('laporan.print', compact('transactions'));
     }

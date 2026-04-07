@@ -132,7 +132,28 @@
                         <form action="{{ route('books.store') }}" method="POST">
                             @csrf
 
-                            @foreach (['judul', 'penulis', 'penerbit', 'tahun', 'kategori', 'stok'] as $field)
+                            {{-- JUDUL (PALING ATAS) --}}
+                            <div class="mb-3">
+                                <label class="form-label">Judul</label>
+                                <input type="text" name="judul" class="form-control" placeholder="Masukkan judul"
+                                    required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select name="kategori"
+                                    class="form-control rounded-xl border-gray-200 focus:ring-2 focus:ring-blue-400"
+                                    required>
+                                    <option value="">-- Pilih Kategori --</option>
+                                    <option value="dongeng">Dongeng</option>
+                                    <option value="fiksi">Fiksi</option>
+                                    <option value="non-fiksi">Non-Fiksi</option>
+                                    <option value="sejarah">Sejarah</option>
+                                    <option value="kenangan">Kenangan</option>
+                                </select>
+                            </div>
+
+                            @foreach (['penulis', 'penerbit', 'tahun', 'stok'] as $field)
                                 <div class="mb-3">
                                     <label class="form-label capitalize">{{ $field }}</label>
                                     <input type="{{ $field == 'tahun' || $field == 'stok' ? 'number' : 'text' }}"
@@ -168,17 +189,38 @@
                             @csrf
                             @method('PUT')
 
-                            @foreach (['judul', 'penulis', 'penerbit', 'tahun', 'kategori', 'stok'] as $field)
+                            {{-- JUDUL --}}
+                            <div class="mb-3">
+                                <label class="form-label">Judul</label>
+                                <input type="text" id="edit_judul" name="judul"
+                                    class="form-control rounded-xl border-gray-200">
+                            </div>
+
+                            {{-- KATEGORI (HANYA 1x DI SINI) --}}
+                            <div class="mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select id="edit_kategori" name="kategori"
+                                    class="form-control rounded-xl border-gray-200">
+                                    <option value="">-- Pilih Kategori --</option>
+                                    <option value="dongeng">Dongeng</option>
+                                    <option value="fiksi">Fiksi</option>
+                                    <option value="non-fiksi">Non-Fiksi</option>
+                                    <option value="sejarah">Sejarah</option>
+                                    <option value="kenangan">Kenangan</option>
+                                </select>
+                            </div>
+
+                            {{-- FIELD LAIN --}}
+                            @foreach (['penulis', 'penerbit', 'tahun', 'stok'] as $field)
                                 <div class="mb-3">
                                     <label class="form-label capitalize">{{ $field }}</label>
                                     <input type="{{ $field == 'tahun' || $field == 'stok' ? 'number' : 'text' }}"
                                         id="edit_{{ $field }}" name="{{ $field }}"
-                                        class="form-control rounded-xl border-gray-200 focus:ring-2 focus:ring-blue-400">
+                                        class="form-control rounded-xl border-gray-200">
                                 </div>
                             @endforeach
 
-                            <button type="submit"
-                                class="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition">
+                            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-xl">
                                 Update
                             </button>
                         </form>
