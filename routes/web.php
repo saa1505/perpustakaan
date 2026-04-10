@@ -10,6 +10,7 @@ use App\Models\Book;
 use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +23,11 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 Route::get('/user', function () {
     return view('user.home');
 })->middleware('auth');
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/login'); // ⬅️ ini yang penting
+})->name('logout');
 
 Route::get('/search', function (Illuminate\Http\Request $request) {
 
@@ -106,5 +112,17 @@ Route::get('/buku/{id}', [UserController::class, 'detail']);
 Route::get('/buku-saya', [UserController::class, 'bukuSaya']);
 Route::get('/transaksi/edit/{id}', [UserController::class, 'editTanggal']);
 Route::post('/transaksi/edit/{id}', [UserController::class, 'updateTanggal']);
+
+Route::get('/baca/{id}', [UserController::class, 'baca'])->name('baca.buku');
+
+Route::put('/transactions/{id}', [UserController::class, 'updateTransaksi']);
+Route::delete('/transaksi/delete/{id}', [UserController::class, 'destroyTransaksi']);
+Route::post('/admin/confirm/{id}', [TransactionController::class, 'confirm']);
+
+Route::get('/search-buku', function (Illuminate\Http\Request $request) {
+    return \App\Models\Book::where('judul', 'like', '%' . $request->q . '%')
+        ->take(5)
+        ->get();
+});
 
 require __DIR__ . '/auth.php';

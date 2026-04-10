@@ -30,6 +30,7 @@
                     {{-- HEADER --}}
                     <thead class="bg-gradient-to-r from-gray-800 to-gray-700 text-white">
                         <tr class="text-center">
+                            <th class="py-3">Cover Buku</th>
                             <th class="py-3">Judul</th>
                             <th class="py-3">Penulis</th>
                             <th class="py-3">Penerbit</th>
@@ -44,6 +45,14 @@
                     <tbody class="text-gray-700">
                         @forelse ($books as $book)
                             <tr class="text-center hover:bg-blue-50/40 transition duration-200">
+                                <td>
+                                    @if ($book->image)
+                                        <img src="{{ asset('storage/' . $book->image) }}"
+                                            class="w-12 h-12 object-cover rounded-lg mx-auto border shadow">
+                                    @else
+                                        <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-lg mx-auto">
+                                    @endif
+                                </td>
                                 <td class="py-2 font-medium">{{ $book->judul }}</td>
                                 <td>{{ $book->penulis }}</td>
                                 <td>{{ $book->penerbit }}</td>
@@ -58,14 +67,14 @@
                                         {{-- EDIT --}}
                                         <button
                                             class="w-10 h-10 flex items-center justify-center 
-            border border-yellow-500 text-yellow-500 
-            rounded-md bg-transparent 
-            hover:bg-yellow-50 transition btn-edit"
+    border border-yellow-500 text-yellow-500 
+    rounded-md bg-transparent 
+    hover:bg-yellow-50 transition btn-edit"
                                             data-id="{{ $book->id }}" data-judul="{{ $book->judul }}"
                                             data-penulis="{{ $book->penulis }}" data-penerbit="{{ $book->penerbit }}"
                                             data-tahun="{{ $book->tahun }}" data-kategori="{{ $book->kategori }}"
                                             data-stok="{{ $book->stok }}" data-bs-toggle="modal"
-                                            data-bs-target="#modalEdit">
+                                            data-bs-target="#modalEdit"> <!-- 🔥 INI WAJIB -->
 
                                             <!-- ICON PENSIL (FIX) -->
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
@@ -129,8 +138,13 @@
                     </div>
 
                     <div class="modal-body pt-2">
-                        <form action="{{ route('books.store') }}" method="POST">
+                        <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
+
+                            <div class="mb-3">
+                                <label>Gambar Buku</label>
+                                <input type="file" name="image" class="form-control">
+                            </div>
 
                             {{-- JUDUL (PALING ATAS) --}}
                             <div class="mb-3">
@@ -185,9 +199,14 @@
                     </div>
 
                     <div class="modal-body pt-2">
-                        <form id="formEdit" method="POST">
+                        <form id="formEdit" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
+
+                            <div class="mb-3">
+                                <label>Gambar Buku</label>
+                                <input type="file" name="image" class="form-control">
+                            </div>
 
                             {{-- JUDUL --}}
                             <div class="mb-3">
@@ -222,7 +241,7 @@
 
                             <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-xl">
                                 Update
-                            </button>
+                            </button> 
                         </form>
                     </div>
 

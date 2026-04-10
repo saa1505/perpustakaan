@@ -96,10 +96,11 @@
 
             <div class="row align-items-center">
 
-                {{-- GAMBAR --}}
-                <div class="col-md-5">
-                    <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d" class="detail-img">
-                </div>
+                @if ($buku->image)
+                    <img src="{{ asset('storage/' . $buku->image) }}" style="width:100%; height:200px; object-fit:cover;">
+                @else
+                    <img src="https://via.placeholder.com/300x200?text=No+Image">
+                @endif
 
                 {{-- DETAIL --}}
                 <div class="col-md-7">
@@ -128,11 +129,17 @@
                     {{-- DESKRIPSI --}}
                     <div class="detail-desc">
 
-                        @if ($sudahPinjam)
-                            {{ $buku->deskripsi_full ?? 'Belum ada deskripsi lengkap.' }}
+                        @if ($buku->deskripsi)
+                            <p>
+                                {{ $buku->deskripsi }}
+                            </p>
                         @else
-                            {{ $buku->deskripsi ?? 'Tidak ada deskripsi buku.' }}
+                            <p>
+                                Buku ini menceritakan kisah menarik yang bisa kamu baca setelah meminjam buku ini.
+                            </p>
+                        @endif
 
+                        @if (!$sudahPinjam)
                             <div class="text-danger mt-2">
                                 📌 Pinjam buku untuk membaca cerita lengkap
                             </div>

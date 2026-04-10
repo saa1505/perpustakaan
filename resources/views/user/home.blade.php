@@ -90,6 +90,45 @@
             height: 180px;
             background: url('https://images.unsplash.com/photo-1512820790803-83ca734da794') center/cover;
         }
+
+        .video-box iframe {
+            border-radius: 20px;
+            width: 100%;
+            height: 300px;
+        }
+
+        .img-buku {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background: #f3f4f6;
+            padding: 5px;
+        }
+
+        .book-card {
+            display: inline-block;
+            width: auto;
+            min-width: 250px;
+            max-width: 300px;
+        }
+
+        .book-img {
+            width: 100%;
+            height: 260px;
+            /* lebih tinggi biar portrait enak */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f3f4f6;
+            overflow: hidden;
+        }
+
+        .book-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* ini wajib */
+        }
     </style>
 
     {{-- HERO --}}
@@ -128,7 +167,10 @@
 
                 <div class="col-md-6">
                     <div class="video-box">
-                        <iframe src="https://www.youtube.com/embed/2e-eXJ6HgkQ"></iframe>
+                        <iframe width="100%" height="300"
+                            src="https://www.youtube.com/embed/2dj56Wwz1l0?autoplay=1&mute=1&controls=0" frameborder="0"
+                            allow="autoplay; encrypted-media" allowfullscreen>
+                        </iframe>
                     </div>
                 </div>
 
@@ -154,10 +196,16 @@
         <div class="row">
 
             @foreach ($buku as $b)
-                <div class="col-md-4 mb-4">
+                <div class="col-auto mb-4">
                     <div class="book-card shadow-sm">
 
-                        <div class="book-img"></div>
+                        @if ($b->image)
+                            <img src="{{ asset('storage/' . $b->image) }}"
+                                style="width:100%; height:200px; object-fit:contain; background:#f3f4f6;">
+                        @else
+                            <img src="https://via.placeholder.com/300x200?text=No+Image"
+                                style="width:100%; height:200px; object-fit:contain;">
+                        @endif
 
                         <div class="p-3">
                             <h5>{{ $b->judul }}</h5>

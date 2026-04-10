@@ -29,6 +29,12 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->store('books', 'public');
+        } else {
+            $image = null;
+        }
+
         Book::create([
             'judul' => $request->judul,
             'penulis' => $request->penulis,
@@ -36,6 +42,9 @@ class BookController extends Controller
             'tahun' => $request->tahun,
             'kategori' => $request->kategori,
             'stok' => $request->stok,
+            'sinopsis' => $request->sinopsis ?? $request->deskripsi,
+            'deskripsi_full' => $request->deskripsi_full ?? $request->deskripsi,
+            'image' => $image,
         ]);
 
         return redirect()->route('books.index')
@@ -58,6 +67,12 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
 
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->store('books', 'public');
+        } else {
+            $image = $book->image;
+        }
+
         $book->update([
             'judul' => $request->judul,
             'penulis' => $request->penulis,
@@ -65,6 +80,10 @@ class BookController extends Controller
             'tahun' => $request->tahun,
             'kategori' => $request->kategori,
             'stok' => $request->stok,
+            'sinopsis' => $request->sinopsis ?? $request->deskripsi,
+            'deskripsi_full' => $request->deskripsi_full ?? $request->deskripsi,
+            'image' => $image,
+
         ]);
 
         return redirect()->route('books.index')

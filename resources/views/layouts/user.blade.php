@@ -11,6 +11,8 @@
     <!-- DATATABLE CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         body {
             margin: 0;
@@ -21,7 +23,7 @@
         .navbar-custom {
             position: absolute;
             width: 100%;
-            z-index: 100;
+            z-index: 1000;
             background: transparent;
         }
 
@@ -66,6 +68,72 @@
             background: #3f4366 !important;
             position: relative !important;
         }
+
+        /* SEARCH BOX */
+        .search-box {
+            width: 260px;
+            padding: 10px 15px 10px 40px;
+            border-radius: 25px;
+            border: none;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            transition: 0.3s;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-box:focus {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ICON */
+        .search-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+        }
+
+        /* DROPDOWN */
+        .search-result {
+            position: absolute;
+            top: 45px;
+            width: 300px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: none;
+            z-index: 999;
+        }
+
+        /* ITEM */
+        .search-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .search-item:hover {
+            background: #f3f4f6;
+        }
+
+        /* JUDUL */
+        .search-item strong {
+            font-size: 14px;
+            color: #111827;
+        }
+
+        /* PENULIS */
+        .search-item small {
+            color: gray;
+        }
     </style>
 </head>
 
@@ -80,10 +148,21 @@
             <div class="container">
 
                 <a class="navbar-brand fw-bold text-white" href="/user">
-                    📚 Perpustakaan 
+                    📚 Perpustakaan
                 </a>
 
                 <div class="ms-auto d-flex align-items-center gap-4">
+
+                    {{-- SEARCH --}}
+                    <div class="search-wrapper">
+                       
+                        <input type="text" id="searchInput" class="search-box" placeholder="Cari buku...">
+
+                        <div id="searchResult" class="search-result"></div>
+                    </div>
+
+                    {{-- DROPDOWN HASIL --}}
+                    <div id="searchResult" class="search-result"></div>
 
                     <a href="/user" class="nav-link-custom {{ request()->is('user') ? 'active' : '' }}">
                         Home
@@ -145,6 +224,39 @@
                     }
                 });
             }
+        });
+    </script>
+
+    <script>
+        $('#searchInput').on('keyup', function() {
+            let query = $(this).val();
+
+            if (query.length < 2) {
+                $('#searchResult').hide();
+                return;
+            }
+
+            $.ajax({
+                url: "/search-buku",
+                data: {
+                    q: query
+                },
+                success: function(data) {
+
+                    let html = '';
+
+                    data.forEach(buku => {
+                        html += `
+                    <div class="search-item" onclick="window.location='/buku/${buku.id}'">
+                        <strong>${buku.judul}</strong><br>
+                        <small>${buku.penulis}</small>
+                    </div>
+                `;
+                    });
+
+                    $('#searchResult').html(html).show();
+                }
+            });
         });
     </script>
 

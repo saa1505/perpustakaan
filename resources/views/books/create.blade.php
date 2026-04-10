@@ -50,6 +50,11 @@
                         <input type="number" name="stok" class="form-control">
                     </div>
 
+                    <div class="mb-2">
+                        <label>Deskripsi</label>
+                        <textarea name="deskripsi_full" class="form-control" rows="5"></textarea>
+                    </div>
+
                 </div>
 
                 <div class="modal-footer">

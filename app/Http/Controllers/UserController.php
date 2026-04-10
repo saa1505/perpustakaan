@@ -18,10 +18,18 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+        ]);
+
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt('password') // default
+            'alamat' => $request->alamat,
+            'kelas' => $request->kelas,
+            'nis' => $request->nis,
+            'password' => bcrypt('password')
         ]);
 
         return back()->with('success', 'Anggota berhasil ditambahkan');
@@ -29,14 +37,17 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email
-        ]);
+        $user->name = $request->name;
+        $user->nis = $request->nis;
+        $user->email = $request->email;
+        $user->alamat = $request->alamat;
+        $user->kelas = $request->kelas;
 
-        return back()->with('success', 'Anggota berhasil diupdate');
+        $user->save();
+
+        return redirect()->route('users.index')->with('success', 'Anggota berhasil diupdate');
     }
 
     public function destroy($id)
@@ -105,11 +116,13 @@ class UserController extends Controller
     public function transaksi()
     {
         $transaksi = Transaction::with('book')
-            ->where('user_id',  Auth::id())
+            ->where('user_id', Auth::id())
             ->latest()
             ->get();
 
-        return view('user.transaksi', compact('transaksi'));
+        $books = Book::all(); // 🔥 TAMBAHAN
+
+        return view('user.transaksi', compact('transaksi', 'books'));
     }
 
     public function bukuSaya()
@@ -139,9 +152,50 @@ class UserController extends Controller
         $trx = Transaction::findOrFail($id);
 
         $trx->update([
-            'tanggal_kembali' => $request->tanggal_kembali
+            'tanggal_kembali' => $request->tanggal_kembali,
+            'book_id' => $request->book_id
         ]);
 
         return back()->with('success', 'Tanggal kembali berhasil diupdate!');
+    }
+
+    public function baca($id)
+    {
+        $buku = Book::findOrFail($id);
+
+        $punya = Transaction::where('user_id', Auth::id())
+            ->where('book_id', $id)
+            ->where('status', 'dipinjam')
+            ->exists();
+
+        if (!$punya) {
+            return redirect('/user')->with('error', 'Harus pinjam dulu!');
+        }
+
+        return view('user.baca', compact('buku'));
+    }
+
+    public function updateTransaksi(Request $request, $id)
+    {
+        $trx = Transaction::findOrFail($id);
+
+        $trx->update([
+            'tanggal_pinjam' => $request->tanggal_pinjam,
+            'tanggal_kembali' => $request->tanggal_kembali,
+            'kondisi' => $request->kondisi
+        ]);
+
+        return back()->with('success', 'Transaksi berhasil diupdate');
+    }
+
+    public function destroyTransaksi($id)
+    {
+        $trx = \App\Models\Transaction::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $trx->delete();
+
+        return back()->with('success', 'Transaksi berhasil dihapus');
     }
 }

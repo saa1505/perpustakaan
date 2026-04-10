@@ -16,10 +16,10 @@
 
         {{-- BUTTON --}}
 
-            <button data-bs-toggle="modal" data-bs-target="#modalTambah"
-               class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2.5 rounded-xl shadow-md hover:scale-105 hover:shadow-lg transition mb-6">
-                + Tambah Anggota
-            </button>
+        <button data-bs-toggle="modal" data-bs-target="#modalTambah"
+            class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2.5 rounded-xl shadow-md hover:scale-105 hover:shadow-lg transition mb-6">
+            + Tambah Anggota
+        </button>
 
 
         {{-- CARD TABLE --}}
@@ -31,38 +31,47 @@
                     {{-- HEADER --}}
                     <thead class="bg-gradient-to-r from-gray-800 to-gray-700 text-white">
                         <tr class="text-center">
-                        <th class="p-4">Nama</th>
-                        <th class="p-4">Email</th>
-                        <th class="p-4 text-center">Aksi</th>
-                    </tr>
-                </thead>
+                            <th class="p-4">Nama</th>
+                            <th class="p-4">NIS</th>
+                            <th class="p-4">Email</th>
+                            <th class="p-4">Alamat</th>
+                            <th class="p-4">Kelas</th>
+                            <th class="p-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
 
-                {{-- BODY --}}
-                <tbody>
-                    @foreach ($users as $u)
-                        <tr class="border-b hover:bg-gray-50 transition">
+                    {{-- BODY --}}
+                    <tbody>
+                        @foreach ($users as $u)
+                            <tr class="border-b hover:bg-gray-50 transition">
 
-                            <td class="p-4 font-medium text-gray-700">
-                                {{ $u->name }}
-                            </td>
+                                {{-- 2. NAMA --}}
+                                <td>{{ $u->name }}</td>
 
-                            <td class="p-4 text-gray-500">
-                                {{ $u->email }}
-                            </td>
+                                {{-- 3. NIS --}}
+                                <td>{{ $u->nis }}</td>
 
-                            <td class="p-4">
-                                <div class="flex justify-center gap-3">
+                                {{-- 4. EMAIL --}}
+                                <td>{{ $u->email }}</td>
 
-                                    {{-- EDIT --}}
-                                    <button
-                                        class="w-10 h-10 flex items-center justify-center rounded-lg border border-yellow-400 text-yellow-500 hover:bg-yellow-50 transition"
-                                        data-id="{{ $u->id }}"
-                                        data-name="{{ $u->name }}"
-                                        data-email="{{ $u->email }}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalEdit">
+                                {{-- 5. ALAMAT --}}
+                                <td>{{ $u->alamat }}</td>
 
-                                         <!-- ICON PENSIL (FIX) -->
+                                {{-- 6. Kelas --}}
+                                <td>{{ $u->kelas }}</td>
+
+                                <td class="p-4">
+                                    <div class="flex justify-center gap-3">
+
+                                        {{-- EDIT --}}
+                                        <button
+                                            class="w-10 h-10 flex items-center justify-center rounded-lg border border-yellow-400 text-yellow-500 hover:bg-yellow-50 transition"
+                                            data-id="{{ $u->id }}" data-name="{{ $u->name }}"
+                                            data-email="{{ $u->email }}" data-nis="{{ $u->nis }}"
+                                            data-alamat="{{ $u->alamat }}" data-kelas="{{ $u->kelas }}"
+                                            data-bs-toggle="modal" data-bs-target="#modalEdit">
+
+                                            <!-- ICON PENSIL (FIX) -->
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
@@ -70,17 +79,17 @@
                                                     d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213l-4 1 1-4L16.862 3.487z" />
 
                                             </svg>
-                                    </button>
+                                        </button>
 
-                                    {{-- DELETE --}}
-                                    <form action="{{ route('users.destroy', $u->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
+                                        {{-- DELETE --}}
+                                        <form action="{{ route('users.destroy', $u->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
 
-                                        <button onclick="return confirm('Yakin hapus?')"
-                                            class="w-10 h-10 flex items-center justify-center rounded-lg border border-red-400 text-red-500 hover:bg-red-50 transition">
+                                            <button onclick="return confirm('Yakin hapus?')"
+                                                class="w-10 h-10 flex items-center justify-center rounded-lg border border-red-400 text-red-500 hover:bg-red-50 transition">
 
-                                            <!-- ICON DELETE -->
+                                                <!-- ICON DELETE -->
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
@@ -89,135 +98,166 @@
 
                                                 </svg>
 
-                                        </button>
-                                    </form>
+                                            </button>
+                                        </form>
 
-                                </div>
-                            </td>
+                                    </div>
+                                </td>
 
-                        </tr>
-                    @endforeach
-                </tbody>
+                            </tr>
+                        @endforeach
+                    </tbody>
 
-            </table>
-
-        </div>
-
-    </div>
-
-    {{-- ================= MODAL TAMBAH ================= --}}
-    <div class="modal fade" id="modalTambah">
-        <div class="modal-dialog">
-            <div class="modal-content rounded-3 shadow">
-
-                <div class="modal-header border-0">
-                    <h5 class="fw-semibold">Tambah Anggota</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <form action="{{ route('users.store') }}" method="POST">
-                        @csrf
-
-                        <div class="mb-3">
-                            <label class="text-sm">Nama</label>
-                            <input type="text" name="name"
-                                class="form-control rounded-lg shadow-sm">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="text-sm">Email</label>
-                            <input type="email" name="email"
-                                class="form-control rounded-lg shadow-sm">
-                        </div>
-
-                        <button class="w-100 py-2 rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600">
-                            Simpan
-                        </button>
-                    </form>
-                </div>
+                </table>
 
             </div>
+
         </div>
-    </div>
 
-    {{-- ================= MODAL EDIT ================= --}}
-    <div class="modal fade" id="modalEdit">
-        <div class="modal-dialog">
-            <div class="modal-content rounded-3 shadow">
+        {{-- ================= MODAL TAMBAH ================= --}}
+        <div class="modal fade" id="modalTambah">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-3 shadow">
 
-                <div class="modal-header border-0">
-                    <h5 class="fw-semibold">Edit Anggota</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <div class="modal-header border-0">
+                        <h5 class="fw-semibold">Tambah Anggota</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form action="{{ route('users.store') }}" method="POST">
+                            @csrf
+
+                            <div class="mb-3">
+                                <label>Nama</label>
+                                <input type="text" name="name" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>NIS</label>
+                                <input type="text" name="nis" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Email</label>
+                                <input type="email" name="email" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Alamat</label>
+                                <textarea name="alamat" class="form-control"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Kelas</label>
+                                <input type="text" name="kelas" class="form-control">
+                            </div>
+
+                            <button
+                                class="w-100 py-2 rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600">
+                                Simpan
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
-
-                <div class="modal-body">
-                    <form id="formEdit" method="POST">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="mb-3">
-                            <label class="text-sm">Nama</label>
-                            <input type="text" id="edit_name" name="name"
-                                class="form-control rounded-lg shadow-sm">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="text-sm">Email</label>
-                            <input type="email" id="edit_email" name="email"
-                                class="form-control rounded-lg shadow-sm">
-                        </div>
-
-                        <button class="w-100 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600">
-                            Update
-                        </button>
-                    </form>
-                </div>
-
             </div>
         </div>
-    </div>
 
-    {{-- SCRIPT --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        {{-- ================= MODAL EDIT ================= --}}
+        <div class="modal fade" id="modalEdit">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-3 shadow">
 
-            const modal = document.getElementById('modalEdit');
+                    <div class="modal-header border-0">
+                        <h5 class="fw-semibold">Edit Anggota</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-            modal.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
+                    <div class="modal-body">
+                        <form id="formEdit" method="POST">
+                            @csrf
+                            @method('PUT')
 
-                document.getElementById('edit_name').value = button.getAttribute('data-name');
-                document.getElementById('edit_email').value = button.getAttribute('data-email');
+                            <div class="mb-3">
+                                <label>Nama</label>
+                                <input type="text" id="edit_name" name="name" class="form-control">
+                            </div>
 
-                document.getElementById('formEdit').action = `/users/${button.getAttribute('data-id')}`;
+                            <div class="mb-3">
+                                <label>NIS</label>
+                                <input type="text" id="edit_nis" name="nis" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Email</label>
+                                <input type="email" id="edit_email" name="email" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Alamat</label>
+                                <textarea id="edit_alamat" name="alamat" class="form-control"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Kelas</label>
+                                <input type="text" id="edit_kelas" name="kelas" class="form-control">
+                            </div>
+
+                            <button
+                                class="w-100 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600">
+                                Update
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {{-- SCRIPT --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+                const modal = document.getElementById('modalEdit');
+
+                modal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+
+                    document.getElementById('edit_name').value = button.getAttribute('data-name');
+                    document.getElementById('edit_email').value = button.getAttribute('data-email');
+                    document.getElementById('edit_nis').value = button.getAttribute('data-nis');
+                    document.getElementById('edit_alamat').value = button.getAttribute('data-alamat');
+                    document.getElementById('edit_kelas').value = button.getAttribute('data-kelas');
+
+                    document.getElementById('formEdit').action = `/users/${button.getAttribute('data-id')}`;
+                });
+
             });
+        </script>
 
-        });
-    </script>
+        {{-- DATATABLE --}}
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-    {{-- DATATABLE --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#myTable').DataTable({
-                pageLength: 5,
-                lengthMenu: [5, 10, 25],
-                language: {
-                    search: "Search:",
-                    lengthMenu: "Tampilkan _MENU_ data",
-                    info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-                    paginate: {
-                        next: "Next",
-                        previous: "Prev"
-                    },
-                    zeroRecords: "Data tidak ditemukan"
-                }
+        <script>
+            $(document).ready(function() {
+                $('#myTable').DataTable({
+                    pageLength: 5,
+                    lengthMenu: [5, 10, 25],
+                    language: {
+                        search: "Search:",
+                        lengthMenu: "Tampilkan _MENU_ data",
+                        info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                        paginate: {
+                            next: "Next",
+                            previous: "Prev"
+                        },
+                        zeroRecords: "Data tidak ditemukan"
+                    }
+                });
             });
-        });
-    </script>
+        </script>
 
 </x-app-layout>

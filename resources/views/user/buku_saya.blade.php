@@ -1,6 +1,39 @@
 @extends('layouts.user')
 
 @section('content')
+    <style>
+        .book-cover {
+            width: 100%;
+            max-width: 200px;
+            /* biar gak kegedean */
+            aspect-ratio: 2/3;
+            margin: 20px auto 10px;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #f3f4f6;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* sekarang aman karena container udah pas */
+        }
+
+        .card {
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-body {
+            text-align: center;
+        }
+    </style>
+@section('content')
     <div class="container mt-5">
 
         <h3 class="fw-bold mb-4">📚 Buku Saya</h3>
@@ -12,9 +45,15 @@
 
                     <div class="card shadow-lg border-0 rounded-4 h-100">
 
-                        {{-- GAMBAR --}}
-                        <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d" class="card-img-top"
-                            style="height:200px; object-fit:cover; border-radius: 15px 15px 0 0;">
+                        @if ($trx->book && $trx->book->image)
+                            <div class="book-cover">
+                                <img src="{{ asset('storage/' . $trx->book->image) }}">
+                            </div>
+                        @else
+                            <div class="book-cover">
+                                <img src="https://via.placeholder.com/300x450?text=No+Image">
+                            </div>
+                        @endif
 
                         <div class="card-body">
 
@@ -29,7 +68,7 @@
                             </p>
 
                             {{-- BUTTON --}}
-                            <a href="/buku/{{ $trx->book->id }}" class="btn btn-warning w-100 rounded-pill">
+                            <a href="/baca/{{ $trx->book->id }}" class="btn btn-warning w-100 rounded-pill">
                                 📖 Baca Buku
                             </a>
 

@@ -71,4 +71,14 @@ class TransactionController extends Controller
 
         return back()->with('success', 'Data transaksi berhasil dihapus');
     }
+
+    public function confirm($id)
+    {
+        $trx = Transaction::findOrFail($id);
+
+        $trx->is_confirmed = true;
+        $trx->save();
+
+        return back()->with('success', 'Transaksi dikonfirmasi!');
+    }
 }

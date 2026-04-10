@@ -48,6 +48,12 @@
                     <input type="number" name="stok" value="{{ $book->stok }}" class="form-control">
                 </div>
 
+                <div class="mb-3">
+                    <label>Deskripsi</label>
+                    <textarea name="deskripsi_full" class="form-control" rows="5"></textarea>
+                </div>
+
+
                 <div class="d-flex justify-content-end">
                     <a href="{{ route('books.index') }}" class="btn btn-secondary me-2">Batal</a>
                     <button type="submit" class="btn btn-primary">Update</button>

@@ -108,9 +108,18 @@
                                 </td>
 
                                 {{-- AKSI --}}
-                                <td class="p-4 min-w-[160px]">
+                                <td class="text-center">
 
-                                    <div class="flex flex-col items-center gap-2">
+                                    <div class="flex items-center justify-center gap-2 relative z-10">
+
+                                        @if (!$trx->is_confirmed)
+                                            <form action="/admin/confirm/{{ $trx->id }}" method="POST">
+                                                @csrf
+                                                <button class="btn btn-success btn-sm">Konfirmasi</button>
+                                            </form>
+                                        @else
+                                            <span class="badge bg-success">Selesai</span>
+                                        @endif
 
                                         {{-- FORM KEMBALI --}}
                                         @if ($trx->status == 'pinjam')
@@ -131,6 +140,31 @@
                                                 </button>
                                             </form>
                                         @endif
+
+                                        <button
+                                            onclick="openEditModal(
+    {{ $trx->id }},
+    '{{ $trx->tanggal_pinjam }}',
+    '{{ $trx->tanggal_kembali }}',
+    '{{ $trx->kondisi ?? 'baik' }}',
+    '{{ $trx->user->name }}',
+    '{{ $trx->book->judul }}'
+)"
+                                            class="w-10 h-10 flex items-center justify-center 
+    border border-yellow-500 text-yellow-500 
+    rounded-md hover:bg-yellow-50 transition">
+
+                                            <!-- ICON PENSIL (FIX) -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213l-4 1 1-4L16.862 3.487z" />
+
+                                            </svg>
+
+                                        </button>
+
 
                                         {{-- DELETE --}}
                                         <form action="{{ route('transactions.destroy', $trx->id) }}" method="POST">
@@ -177,7 +211,74 @@
 
     </div>
 
-    {{-- ================= MODAL ================= --}}
+    {{-- MODAL EDIT --}}
+    <div class="modal fade" id="modalEdit" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+
+                {{-- HEADER --}}
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-semibold">
+                        Edit Transaksi
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                {{-- BODY --}}
+                <div class="modal-body">
+                    <form method="POST" id="formEdit">
+                        @csrf
+                        @method('PUT')
+
+                        {{-- USER --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nama Peminjam</label>
+                            <input type="text" id="edit_user" class="form-control rounded-3 bg-light" readonly>
+                        </div>
+
+                        {{-- BUKU --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nama Buku</label>
+                            <input type="text" id="edit_buku" class="form-control rounded-3 bg-light" readonly>
+                        </div>
+
+                        {{-- TANGGAL PINJAM --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tanggal Pinjam</label>
+                            <input type="date" name="tanggal_pinjam" id="edit_tanggal_pinjam"
+                                class="form-control rounded-3 shadow-sm" required>
+                        </div>
+
+                        {{-- TANGGAL KEMBALI --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tanggal Kembali</label>
+                            <input type="date" name="tanggal_kembali" id="edit_tanggal_kembali"
+                                class="form-control rounded-3 shadow-sm" required>
+                        </div>
+
+                        {{-- KONDISI --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Kondisi Buku</label>
+                            <select name="kondisi" id="edit_kondisi" class="form-select rounded-3 shadow-sm">
+                                <option value="baik">Baik</option>
+                                <option value="rusak">Rusak</option>
+                                <option value="hilang">Hilang</option>
+                            </select>
+                        </div>
+
+                        {{-- BUTTON --}}
+                        <button type="submit" class="w-100 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600">
+                            Simpan Perubahan
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- ================= MODAL TAMBAH ================= --}}
     <div class="modal fade" id="modalTambah" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-2xl border-0 shadow-lg">
@@ -256,6 +357,24 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        function openEditModal(id, pinjam, kembali, kondisi, user, buku) {
+
+            document.getElementById('edit_tanggal_pinjam').value = pinjam;
+            document.getElementById('edit_tanggal_kembali').value = kembali;
+            document.getElementById('edit_kondisi').value = kondisi;
+
+            // 👉 tambahan baru
+            document.getElementById('edit_user').value = user;
+            document.getElementById('edit_buku').value = buku;
+
+            document.getElementById('formEdit').action = `/transactions/${id}`;
+
+            var modal = new bootstrap.Modal(document.getElementById('modalEdit'));
+            modal.show();
+        }
     </script>
 
 </x-app-layout>
